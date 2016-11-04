@@ -15,25 +15,25 @@ SVGraph_Start(){
 }
 
 SVGraph_Chart(Width, Height, Margin := 40){
-	Width := (IsNum(Width) ? Width : 500), Height := (IsNum(Height) ? Height : 500), Margin := (IsNum(Margin) ? Margin : 40)
+	Width := (__IsNum(Width) ? Width : 500), Height := (__IsNum(Height) ? Height : 500), Margin := (__IsNum(Margin) ? Margin : 40)
 	SVGraph_Attach().Document.parentWindow.eval("var plot = new Chart(" Width "," Height "," Margin ");")
 }
 
 SVGraph_UpdateChart(Width := "", Height := "", Margin := ""){
-	SVGraph_Attach().Document.parentWindow.eval("plot.Update(" IsDefined(Width) "," IsDefined(Height) "," IsDefined(Margin) ");")
+	SVGraph_Attach().Document.parentWindow.eval("plot.Update(" __IsDefined(Width) "," __IsDefined(Height) "," __IsDefined(Margin) ");")
 }
 
 SVGraph_SetAxes(xmin := "", xmax := "", ymin := "", ymax := "", Boxed := False){
-	xmin := IsDefinedNum(xmin), xmax := IsDefinedNum(xmax), ymin := IsDefinedNum(ymin), ymax := IsDefinedNum(ymax)
+	xmin := __IsDefinedNum(xmin), xmax := __IsDefinedNum(xmax), ymin := __IsDefinedNum(ymin), ymax := __IsDefinedNum(ymax)
 	SVGraph_Attach().Document.parentWindow.eval("plot.SetAxes(" xmin "," xmax "," ymin "," ymax "," Boxed ");")
 }
 
 SVGraph_SetLables(xLable := "", yLable := ""){
-	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetLables(" IsDefined("""" xLable """") "," IsDefined("""" yLable """") ");")
+	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetLables(" __IsDefined("""" xLable """") "," __IsDefined("""" yLable """") ");")
 }
 
-SVGraph_SetGrid(xory := "", major := "", minor := "", colour := "", dasharray := ""){
-	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetGrid(""" xory """," IsDefined(major) "," IsDefined(minor) "," IsDefined("""" colour """") "," IsDefined("""" dasharray """") ");")
+SVGraph_SetGrid(xory := "", Major := "", Minor := "", Colour := "", DashArray := ""){
+	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetGrid(""" xory """," __IsDefined(Major) "," __IsDefined(Minor) "," __IsDefined("""" Colour """") "," __IsDefined("""" DashArray """") ");")
 }
 
 SVGraph_ShowScrollbar(Bool := False){
@@ -66,7 +66,7 @@ SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, Scale
 }
 
 SVGraph_RemovePath(index := 0){
-	index := IsNum(index) && index > 0 ? index : 0
+	index := __IsNum(index) && index > 0 ? index : 0
 	SVGraph_Attach().Document.parentWindow.eval("plot.RemovePath(" index ");")
 }
 
@@ -151,19 +151,19 @@ SVGraph_MiniFormatXML(XML){
 	return SubStr(XML, 2)
 }
 
-IsNum(Num){
+__IsNum(Num){
 	if Num is Number
 		return 1
 	return 0
 }
 
-IsDefined(val){
+__IsDefined(val){
 	if(val = "" || val = """""")
 		return "undefined"
 	return val
 }
 
-IsDefinedNum(Num){
+__IsDefinedNum(Num){
 	if Num is Number
 		return Num
 	return """undefined"""
