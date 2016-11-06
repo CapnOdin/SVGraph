@@ -70,9 +70,9 @@ SVGraph_RemovePath(index := 0){
 	SVGraph_Attach().Document.parentWindow.eval("plot.RemovePath(" index ");")
 }
 
-SVGraph_SaveSVG(filename){
+SVGraph_SaveSVG(Filename){
 	Critical
-	SVG := FileOpen(filename, "w")
+	SVG := FileOpen(Filename, "w")
 	SVG.Write(SVGraph_FormatXML(SVGraph_Attach().Document.getElementById("svg").outerHTML))
 	SVG.Close()
 }
