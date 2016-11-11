@@ -66,7 +66,6 @@ SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, Scale
 }
 
 SVGraph_RemovePath(index := ""){
-	MsgBox, % __IsDefinedNum(index)
 	SVGraph_Attach().Document.parentWindow.eval("plot.RemovePath(" __IsDefinedNum(index) ");")
 }
 
