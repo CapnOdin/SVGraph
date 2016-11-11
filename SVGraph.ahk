@@ -62,7 +62,7 @@ SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, Scale
 		StrY .= LstY[A_Index] ","
 	}
 	StrX .= "]", StrY .= "]"
-	SVGraph_Attach().Document.parentWindow.eval("plot.ScatterPlot(""" StrX """,""" StrY """,""" Colour """," Size "," Opacity "," ScaleAxes "," Group ");")
+	SVGraph_Attach().Document.parentWindow.eval("plot.ScatterPlot(""" StrX """,""" StrY """,""" Colour """,""" Size """," Opacity "," ScaleAxes "," Group ");")
 }
 
 SVGraph_RemovePath(index := 0){
