@@ -73,7 +73,13 @@
 				};
 				
 				this.RemovePath = function(index){
-					this.svg.selectAll("svg > .graph").select(function(d, i) {return i == index ? this : null;}).remove();
+					if(index == undefined) {
+						this.svg.selectAll("svg > .graph").remove();
+					} else {
+						var graphs = this.svg.selectAll("svg > .graph");
+						index = index < 0 ? graphs._groups[0].length + index : index;
+						graphs.select(function(d, i){return i == index ? this : null;}).remove();
+					}
 				};
 				
 				this.SetAxes = function(xmin, xmax, ymin, ymax, Boxed) {

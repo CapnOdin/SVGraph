@@ -2,7 +2,7 @@
 #include SVGraph.ahk
 #include *i <Gdip>
 
-Plots := [], NumOfPlts := -1, locked := False
+Plots := [], locked := False
 
 Gui, 1:New, +Resize, SVGraph
 Gui, Add, Text, x+m y+m, FunX
@@ -112,9 +112,7 @@ Axes:
 	if(!locked){
 		Gui, Submit, NoHide
 		SVGraph_SetAxes(xmin, xmax, ymin, ymax, boxed)
-		loop % NumOfPlts + 1 {
-			SVGraph_RemovePath(0)
-		}
+		SVGraph_RemovePath()
 		IE.Document.parentWindow.eval("plot.ID = 0;")
 		for index, plot in Plots {
 			SVGraph_LinePlot(plot[1], plot[2], plot[3], plot[4], plot[5], plot[6])
@@ -147,13 +145,11 @@ Plot:
 	Gui, Submit, NoHide
 	SVGraph_LinePlot(EditX, EditY, Colour ? Colour : "#999", Resolution, Axis, Optimize)
 	Plots.Push([EditX, EditY, Colour ? Colour : "#999", Resolution, Axis, Optimize])
-	NumOfPlts++
 return
 
 DeletePlt:
 	Plots.Pop()
-	SVGraph_RemovePath(NumOfPlts)
-	NumOfPlts := NumOfPlts > -1 ? NumOfPlts - 1 : -1
+	SVGraph_RemovePath(-1)
 return
 
 ;-------------------------------- MSGs ----------------------------------------------

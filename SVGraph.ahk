@@ -65,9 +65,9 @@ SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, Scale
 	SVGraph_Attach().Document.parentWindow.eval("plot.ScatterPlot(""" StrX """,""" StrY """,""" Colour """,""" Size """," Opacity "," ScaleAxes "," Group ");")
 }
 
-SVGraph_RemovePath(index := 0){
-	index := __IsNum(index) && index > 0 ? index : 0
-	SVGraph_Attach().Document.parentWindow.eval("plot.RemovePath(" index ");")
+SVGraph_RemovePath(index := ""){
+	MsgBox, % __IsDefinedNum(index)
+	SVGraph_Attach().Document.parentWindow.eval("plot.RemovePath(" __IsDefinedNum(index) ");")
 }
 
 SVGraph_SaveSVG(Filename){
@@ -166,6 +166,6 @@ __IsDefined(val){
 __IsDefinedNum(Num){
 	if Num is Number
 		return Num
-	return """undefined"""
+	return "undefined"
 }
 
