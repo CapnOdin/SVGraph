@@ -137,10 +137,26 @@ function Chart(width, height, margin) {
 		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 0);
 	};
 	
+	this.LinePlot2 = function(LstX, LstY, Colour, ScaleAxes) {
+		var Data = d3.zip(LstX, LstY);
+		
+		if(ScaleAxes || !this.Axes.Exist){
+			this.Axes.ScaleToData(Data);
+		} else {
+			Data = Data.filter(this.Axes.LimitToOne);
+		}
+		
+		var line = this.NewGroup("line-graph", true);
+		
+		this.DrawLine(line, Data, Colour, Curve = d3.curveCatmullRom);
+		
+		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 0);
+	};
+	
 	this.ScatterPlot = function(LstX, LstY, Colour, Size, Opacity, ScaleAxes, Group) {
 		Group = Group ? Group : this.NewGroup("graph");
 		
-		var Data = d3.zip(eval(LstX), eval(LstY));
+		var Data = d3.zip(LstX, LstY);
 		
 		if(ScaleAxes || !this.Axes.Exist){
 			this.Axes.ScaleToData(Data);
@@ -304,8 +320,8 @@ function Axes(width, height, margin){
 	
 	this.NewAxis = function(ID){
 		this.axes.append("text")
-			.attr("id", "lable-" + ID)
-			.attr("class", "lable")
+			.attr("id", "Label-" + ID)
+			.attr("class", "Label")
 			.attr("text-anchor", "middle")
 			.attr("dy", (ID == "x" ? 25 : -15));
 		this.axes.append("g")
@@ -322,29 +338,30 @@ function Axes(width, height, margin){
 	this.DomAxisX = document.getElementById("axis-x");
 	this.DomAxisY = document.getElementById("axis-y");
 	
-	this.SetLables = function(xLable, yLable){
-		if(xLable != undefined){
-			this.axes.select("#lable-x").text(xLable);
+	this.SetLabels = function(xLabel, yLabel){
+		if(xLabel != undefined){
+			this.axes.select("#Label-x").text(xLabel);
 		}
-		if(yLable != undefined){
-			this.axes.select("#lable-y").text(yLable);
+		if(yLabel != undefined){
+			this.axes.select("#Label-y").text(yLabel);
 		}
+		this.PlaceLabel();
 	};
 	
-	this.PlaceLable = function(){
+	this.PlaceLabel = function(){
 		if(this.boxed){
 			var ticktextX = this.DomAxisX.getElementsByTagName("text");
 			var ticktextY = this.DomAxisY.getElementsByTagName("text");
 			if(ticktextX.length > 0){
-				var lable = document.getElementById("lable-x").getBBox();
-				this.axes.select("#lable-x").attr("dy", 10 + lable.height + ticktextX[ticktextX.length/2].getBBox().height);
+				var Label = document.getElementById("Label-x").getBBox();
+				this.axes.select("#Label-x").attr("dy", 10 + Label.height + ticktextX[ticktextX.length/2].getBBox().height);
 			}
 			if(ticktextY.length > 0){
-				this.axes.select("#lable-y").attr("dy", -10 + ticktextY[ticktextY.length/2].getBBox().x);
+				this.axes.select("#Label-y").attr("dy", -10 + ticktextY[ticktextY.length/2].getBBox().x);
 			}
 		} else {
-			this.axes.select("#lable-x").attr("dy",  25);
-			this.axes.select("#lable-y").attr("dy", -15);
+			this.axes.select("#Label-x").attr("dy",  25);
+			this.axes.select("#Label-y").attr("dy", -15);
 		}
 	};
 	
@@ -364,7 +381,7 @@ function Axes(width, height, margin){
 		this.Axis("y");
 		this.xGrid.Update(-this.height, "0," + this.height, this.boxed);
 		this.yGrid.Update(-this.width, "0,0", this.boxed);
-		this.PlaceLable();
+		this.PlaceLabel();
 		this.Exist = true;
 	};
 	
@@ -390,7 +407,7 @@ function Axes(width, height, margin){
 		);
 		axis.call((xory === "x" ? this.xAxis.tickValues(this.x.GetTicks()) : this.yAxis.tickValues(this.y.GetTicks())));
 		
-		this.axes.select("#lable-" + xory).attr("transform", "translate(" + (xory == "x" ? (this.width / 2 + "," + this.height + ")")
+		this.axes.select("#Label-" + xory).attr("transform", "translate(" + (xory == "x" ? (this.width / 2 + "," + this.height + ")")
 																						 : ("0," + this.height / 2 + ")rotate(-90)"))
 		);
 	};

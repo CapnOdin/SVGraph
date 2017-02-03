@@ -48,8 +48,8 @@ SVGraph_SetGrid(xory := "", Major := "", Minor := "", Colour := "", DashArray :=
 	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetGrid(""" xory """," __IsDefined(Major) "," __IsDefined(Minor) "," __IsDefined("""" Colour """") "," __IsDefined("""" DashArray """") ");")
 }
 
-SVGraph_SetLables(xLable := "", yLable := ""){
-	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetLables(" __IsDefined("""" xLable """") "," __IsDefined("""" yLable """") ");")
+SVGraph_SetLabels(xLabel := "", yLabel := ""){
+	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.SetLabels(" __IsDefined("""" xLabel """") "," __IsDefined("""" yLabel """") ");")
 }
 
 SVGraph_MakeLegend(Data := "", Colour := ""){
@@ -66,21 +66,20 @@ SVGraph_LinePlot(FunX, FunY, Colour := "#999", Resolution := 0, Axis := "x", Opt
 	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot(""" FunX """, """ FunY """,""" Colour """," Resolution "," Axis "," Optimize ");")
 }
 
+SVGraph_LinePlot2(LstX, LstY, Colour := "#999", ScaleAxes := False){
+	StrX := ObjectToString(LstX), StrY := ObjectToString(LstY)
+	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot2(" StrX "," StrY ",""" Colour """," ScaleAxes ");")
+}
+
 SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, ScaleAxes := False, Group := False){
 	Group := Group ? Group : "undefined"
-	StrX := "[", StrY := "["
-	loop % (LstX.Length() < LstY.Length() ? LstX.Length() : LstY.Length()) {
-		StrX .= LstX[A_Index] ","
-		StrY .= LstY[A_Index] ","
-	}
-	StrX .= "]", StrY .= "]"
-	SVGraph_Attach().Document.parentWindow.eval("plot.ScatterPlot(""" StrX """,""" StrY """,""" Colour """,""" Size """," Opacity "," ScaleAxes "," Group ");")
+	StrX := ObjectToString(LstX), StrY := ObjectToString(LstY)
+	SVGraph_Attach().Document.parentWindow.eval("plot.ScatterPlot(" StrX "," StrY ",""" Colour """,""" Size """," Opacity "," ScaleAxes "," Group ");")
 }
 
 SVGraph_BarPlot(Data, Colour := "", Width := 10, Axis := "x", Opacity := 1){
 	StrColor := Colour ? ObjectToString(Colour) : "undefined"
 	StrData  := ObjectToString(Data)
-	
 	SVGraph_Attach().Document.parentWindow.eval("plot.BarPlot(""" Axis """," StrData "," StrColor ",""" Width """," Opacity ");")
 }
 
