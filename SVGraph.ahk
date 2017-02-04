@@ -7,8 +7,8 @@ SVGraph_Attach(ActiveX := False){
 	return IE
 }
 
-SVGraph_Start(){
-	SVGraph_Attach().Navigate(A_ScriptDir "\SVGraph.html")
+SVGraph_Start(dir := ""){
+	SVGraph_Attach().Navigate((dir ? dir : A_ScriptDir) "\SVGraph.html")
 	While SVGraph_Attach().ReadyState != 4 || SVGraph_Attach().Busy {
 		Sleep, 20
 	}
@@ -61,14 +61,14 @@ SVGraph_MakeLegend(Data := "", Colour := ""){
 
 ;---------------------------------------------------------------------------------------------------------------------------------
 
-SVGraph_LinePlot(FunX, FunY, Colour := "#999", Resolution := 0, Axis := "x", Optimize := True){
+SVGraph_LinePlot(FunX, FunY, Colour := "#999", Width := 4, Resolution := 0, Axis := "x", Optimize := True){
 	Axis := InStr(Axis, "[") ? Axis : """" Axis """"
-	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot(""" FunX """, """ FunY """,""" Colour """," Resolution "," Axis "," Optimize ");")
+	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot(""" FunX """,""" FunY """,""" Colour """,""" Width """," Resolution "," Axis "," Optimize ");")
 }
 
-SVGraph_LinePlot2(LstX, LstY, Colour := "#999", ScaleAxes := False){
+SVGraph_LinePlot2(LstX, LstY, Colour := "#999", Width := 4, ScaleAxes := False){
 	StrX := ObjectToString(LstX), StrY := ObjectToString(LstY)
-	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot2(" StrX "," StrY ",""" Colour """," ScaleAxes ");")
+	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot2(" StrX "," StrY ",""" Colour """,""" Width """," ScaleAxes ");")
 }
 
 SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, ScaleAxes := False, Group := False){
