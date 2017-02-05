@@ -159,7 +159,7 @@ function Chart(width, height, margin) {
 		
 		this.DrawLine(line, Data, Colour, Width, undefined, Curve);
 		
-		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 1);
+		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 0);
 	};
 	
 	this.ScatterPlot = function(LstX, LstY, Colour, Size, Opacity, ScaleAxes, Group) {
