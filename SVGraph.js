@@ -20,6 +20,18 @@ function Chart(width, height, margin) {
 		feMerge.append("feMergeNode");
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	
+	this.Curves = {	Ba:	 d3.curveBasis,
+					Bu:	 d3.curveBundle,
+					Car: d3.curveCardinal,
+					Cat: d3.curveCatmullRom,
+					L:	 d3.curveLinear,
+					MX:	 d3.curveMonotoneX,
+					MY:	 d3.curveMonotoneY,
+					N:	 d3.curveNatural,
+					S:	 d3.curveStep,
+					SA:	 d3.curveStepAfter,
+					SB:	 d3.curveStepBefore};
+	
 	/*this.svg.append("polygon")
 		.attr("fill-rule", "evenodd")
 		.attr("fill", "#FF00FF")
@@ -116,7 +128,7 @@ function Chart(width, height, margin) {
 		return g;
 	};
 	
-	this.LinePlot = function(FunX, FunY, Colour, Resolution, Range, Optimize) {
+	this.LinePlot = function(FunX, FunY, Colour, Width, Resolution, Range, Optimize) {
 		if(!this.Axes.Exist){
 			this.SetAxes(-100, 100, -100, 100)
 		}
@@ -127,17 +139,14 @@ function Chart(width, height, margin) {
 		if(Resolution == 0){
 			var Resolution = (Math.abs(Range[0]) + Math.abs(Range[1])) / 20000;
 		}
-		
 		var Data = this.Data.FromFunction(FunX, FunY, Range[0], Range[1], Resolution, Optimize, Axis);
-		
 		var line = this.NewGroup("line-graph", true);
 		
-		this.DrawLine(line, Data, Colour);
-		
+		this.DrawLine(line, Data, Colour, Width);
 		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 0);
 	};
 	
-	this.LinePlot2 = function(LstX, LstY, Colour, ScaleAxes) {
+	this.LinePlot2 = function(LstX, LstY, Colour, Width, ScaleAxes, Curve) {
 		var Data = d3.zip(LstX, LstY);
 		
 		if(ScaleAxes || !this.Axes.Exist){
@@ -148,9 +157,9 @@ function Chart(width, height, margin) {
 		
 		var line = this.NewGroup("line-graph", true);
 		
-		this.DrawLine(line, Data, Colour, Curve = d3.curveCatmullRom);
+		this.DrawLine(line, Data, Colour, Width, undefined, Curve);
 		
-		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 0);
+		this.DrawDots(line, Data.filter(function(val){return val != null;}), 3, "#000000", 1);
 	};
 	
 	this.ScatterPlot = function(LstX, LstY, Colour, Size, Opacity, ScaleAxes, Group) {
@@ -182,7 +191,7 @@ function Chart(width, height, margin) {
 		Opacity = Opacity == undefined ? 1 : Opacity;
 		Colour  = Colour  == undefined ? "#0000FF" : Colour;
 		Group   = Group   == undefined ? this.svg : Group;
-		Curve   = Curve   == undefined ? d3.curveCatmullRom : Curve;
+		Curve   = Curve   == undefined ? d3.curveCatmullRom : this.Curves[Curve];
 		
 		Group.datum(Data);
 		
@@ -288,7 +297,7 @@ function Chart(width, height, margin) {
 			var bbox = document.getElementById("legend").getBBox();
 			
 			this.Legend.width  = bbox.width + 7;
-			this.Legend.height = Legend.length * 21;
+			this.Legend.height = Legend.length * 21 + 6;
 			
 			this.Legend.rect.attr("height", this.Legend.height);
 			this.Legend.rect.attr("width",  this.Legend.width);

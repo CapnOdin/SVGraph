@@ -66,9 +66,9 @@ SVGraph_LinePlot(FunX, FunY, Colour := "#999", Width := 4, Resolution := 0, Axis
 	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot(""" FunX """,""" FunY """,""" Colour """,""" Width """," Resolution "," Axis "," Optimize ");")
 }
 
-SVGraph_LinePlot2(LstX, LstY, Colour := "#999", Width := 4, ScaleAxes := False){
-	StrX := ObjectToString(LstX), StrY := ObjectToString(LstY)
-	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot2(" StrX "," StrY ",""" Colour """,""" Width """," ScaleAxes ");")
+SVGraph_LinePlot2(LstX, LstY, Colour := "#999", Width := 4, ScaleAxes := False, Curve := ""){
+	StrX := ObjectToString(LstX), StrY := ObjectToString(LstY), Curve := __IsDefined("""" Curve """")
+	SVGraph_Attach().Document.parentWindow.eval("plot.LinePlot2(" StrX "," StrY ",""" Colour """,""" Width """," ScaleAxes "," Curve ");")
 }
 
 SVGraph_ScatterPlot(LstX, LstY, Colour := "#999", Size := 4, Opacity := 1, ScaleAxes := False, Group := False){
