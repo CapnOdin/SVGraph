@@ -283,7 +283,7 @@ function Chart(width, height, margin) {
 				var entry = this.Legend.append("g")
 					.attr("class", "entry");
 				entry.append("text")
-					.attr("y", index * 20 + 20)
+					.attr("y", index * 20 + 21)
 					.attr("x", -26)
 					.attr("text-anchor", "end")
 					.text(Legend[index]);
@@ -297,7 +297,7 @@ function Chart(width, height, margin) {
 			var bbox = document.getElementById("legend").getBBox();
 			
 			this.Legend.width  = bbox.width + 7;
-			this.Legend.height = Legend.length * 21 + 6;
+			this.Legend.height = Legend.length * 20 + 6 + 4;
 			
 			this.Legend.rect.attr("height", this.Legend.height);
 			this.Legend.rect.attr("width",  this.Legend.width);
