@@ -37,6 +37,10 @@ SVGraph_ShowScrollbar(Bool := False){
 	SVGraph_Attach().Document.body.style.overflow := Bool ? "visible" : "hidden"
 }
 
+SVGraph_ShowAxes(Bool := True){
+	SVGraph_Attach().Document.parentWindow.eval("plot.Axes.HideAxes(" (Bool = True) ");")
+}
+
 ;---------------------------------------------------------------------------------------------------------------------------------
 
 SVGraph_SetAxes(xmin := "", xmax := "", ymin := "", ymax := "", Boxed := False){
