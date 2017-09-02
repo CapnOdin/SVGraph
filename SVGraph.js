@@ -173,13 +173,19 @@ function Chart(width, height, margin) {
 			Data = Data.filter(this.Axes.LimitToOne);
 		}
 		
-		this.DrawDots(Group, Data, Size, Colour, Opacity)
+		this.DrawDots(Group, Data, Size, Colour, Opacity);
 	};
 	
 	this.BarPlot = function(Axis, Data, Colour, Width, Opacity) {
 		var Group = this.NewGroup("graph");
 		
-		this.DrawStacks(Group, Axis, Data, d3.stack(), Width, Colour, Opacity)
+		this.DrawStacks(Group, Axis, Data, d3.stack(), Width, Colour, Opacity);
+	};
+	
+	this.Tree = function(Data) {
+		var Group = this.NewGroup("graph");
+		
+		this.DrawTree(Group, ObjToHierarchy(Data, ""));
 	};
 	
 	this.DrawLine = function(Group, Data, Colour, Width, Opacity, Curve){
@@ -265,7 +271,43 @@ function Chart(width, height, margin) {
 				.attr("height", bool ? function(d) {return Math.abs(plot.Axes.y(d[0]) - plot.Axes.y(d[1]));} : Width)
 				.attr("width", !bool ? function(d) {return Math.abs(plot.Axes.x(d[0]) - plot.Axes.x(d[1]));} : Width)
 				.attr("fill", function(d) {return (rectPerBar == 1) ? Colour[d.data[0] - 1] : null;});
+	};
+	
+	this.DrawTree = function(Group, Data){
+		if(Data.length < 1){
+			return;
+		}
+		
+		Group = Group == undefined ? this.svg : Group;
+		
+		var root = d3.hierarchy(Data);
+		
+		var tree = d3.tree()
+			.size([this.height, this.width - 100]);
+		
+		var link = Group.selectAll(".link")
+			.data(tree(root).links())
+			.enter().append("path")
+				.attr("class", "link")
+				.attr("opacity", 0.5)
+				.attr("d", d3.linkHorizontal()
+					.x(function(d) { return d.y; })
+					.y(function(d) { return d.x; }));
 				
+		var node = Group.selectAll(".node")
+			.data(root.descendants())
+			.enter().append("g")
+				.attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf")
+														   ; }) // + (d.data.id.search("¤") > -1 ? " node--word" : "")
+				.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+		node.append("circle")
+			.attr("r", 2.5); // function(d) { return d.data.id.search("¤") > -1 ? 3.5 : 2.5; }
+
+		node.append("text")
+			.attr("dy", 3)
+			.attr("x", function(d) { return d.children ? -8 : 8; })
+			.text(function(d) { return d.data.id.replace("¤", ""); }); // 
 	};
 	
 	this.MakeLegend = function(Legend, Colour){
@@ -336,7 +378,6 @@ function Axes(width, height, margin){
 		this.axes.append("g")
 			.attr("id", "axis-" + ID)
 			.attr("class", "axis")
-			//.attr("opacity", 0)
 			.on("mouseenter", function(){d3.select("#axis-" + ID + " > path").attr("filter", "url(#dropShadow)");})
 			.on("mouseleave", function(){d3.select("#axis-" + ID + " > path").attr("filter", null);});
 	};
@@ -346,6 +387,12 @@ function Axes(width, height, margin){
 	
 	this.DomAxisX = document.getElementById("axis-x");
 	this.DomAxisY = document.getElementById("axis-y");
+	
+	this.HideAxes = function(bool){
+		if(bool != undefined){
+			this.axes.attr("opacity", bool);
+		}
+	}
 	
 	this.SetLabels = function(xLabel, yLabel){
 		if(xLabel != undefined){
@@ -625,4 +672,40 @@ var Demo = function(text){
 		document.body.insertBefore(p, document.body.childNodes[0]);
 	}
 	document.getElementById("demo").innerHTML = text;
+}
+
+var ObjToHierarchy = function(obj, key) {
+	var Hierarchy = {"id" : key};
+	if((typeof obj === "string" || typeof obj === "number") && obj !== "") {
+		Hierarchy["children"] = [{"id" : obj}];
+	} else {
+		Hierarchy["children"] = [];
+		
+		if(Array.isArray(obj)) {
+			for(i in obj) {
+				if((typeof obj[i] === "string" || typeof obj[i] === "number") && obj[i] !== "") {
+					Hierarchy["children"].push({"id" : obj[i]});
+				} else {
+					Hierarchy["children"].push(ObjToHierarchy(obj[i], ""));
+				}
+			}
+		} else {
+			for(i in obj) {
+				Hierarchy["children"].push(ObjToHierarchy(obj[i], i));
+			}
+		}
+	}
+	return Hierarchy;
+}
+
+var ObjToString = function(obj) {
+	if(typeof obj != "object"){
+		return (typeof obj === "number" ? obj : '"' + obj + '"');
+	}
+	var bool = Array.isArray(obj);
+	res = bool ? "[" : "{";
+	for(key in obj) {
+		res += (!bool ? '"' + key + '" : ' : "") + ObjToString(obj[key]) + ", ";
+	}
+	return res.substr(0, res.length - 2) + (bool ? "]" : "}");
 }
